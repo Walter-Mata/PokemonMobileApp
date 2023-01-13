@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux'
 //COMPONENT
 import PokemonCard from '../../component/PokemonCard'
 //CONTROLLER
-import useController from './controller/index.controller'
+import useController from '../Home/controller/index.controller'
 
-const Home = ({ navigation }) => {
-  const { list, isGettingMoreData } = useSelector((state) => state.pokemon.pokemons)
-  const { isLoading, isCloseToBottom, onSearch, onNextPage } = useController()
+const MyFavorites = ({ navigation }) => {
+  const { favorite } = useSelector((state) => state.pokemon)
+  const { isLoading, onSearchFavorite } = useController()
   const [data, setData] = useState([])
   const [text, setText] = useState('')
 
@@ -21,7 +21,7 @@ const Home = ({ navigation }) => {
         value={text}
         onChangeText={(text) => {
           setText(text)
-          setData([...onSearch(text)])
+          setData([...onSearchFavorite(text)])
         }}
       />
     </View>
@@ -30,28 +30,12 @@ const Home = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={data.length > 0 ? data : list}
+        data={data.length > 0 ? data : favorite}
         ListHeaderComponent={headerInput}
         renderItem={({ item }) => <PokemonCard pokemon={item} />}
-        onScroll={({ nativeEvent }) => {
-          if (isCloseToBottom(nativeEvent) && isGettingMoreData) {
-            onNextPage()
-          }
-        }}
       />
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  card: {
-    display: 'flex',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'black',
-    marginHorizontal: 20,
-    marginVertical: 10,
-  },
-})
-
-export default Home
+export default MyFavorites

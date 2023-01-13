@@ -24,21 +24,15 @@ export const PokemonReducer = (state = initialState.pokemon, action) => {
         favorite: [
           ...state.favorite,
           {
-            id: action.pokemon.id,
-            abilities: action.pokemon.abilities,
-            base_experience: action.pokemon.base_experience,
-            height: action.pokemon.height,
-            moves: action.pokemon.moves,
-            name: action.pokemon.name,
-            sprites: action.pokemon.sprites,
-            stats: action.pokemon.stats,
-            types: action.pokemon.types,
+            ...action.payload,
           },
         ],
       }
     case REMOVE_FAVORITE_POKEMON:
-      return state.favorite.filter((pokemon) => pokemon.id !== action.pokemonId)
-
+      return {
+        ...state,
+        favorite: [...state.favorite.filter((pokemon) => pokemon.id !== action.payload.pokemonId)],
+      }
     default:
       return state
   }

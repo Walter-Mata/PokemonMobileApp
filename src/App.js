@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -13,9 +13,22 @@ import redux from './redux/';
 import {themes} from './themes/themes'
 //SCREENS
 import Home from './screen/Home';
-
+import PokemonDetails from './screen/PokemonDetails';
+import MyFavorites from './screen/MyFavorites';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+
+
+function MyTabs() {
+  return (
+    <Tab.Navigator screenOptions={{headerShown:false}}>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="MyFavorites" component={MyFavorites}  />
+    </Tab.Navigator>
+  );
+}
 
 const App = () => {
   return (
@@ -23,8 +36,9 @@ const App = () => {
             <PersistGate persistor={redux.persistor}>
        <PaperProvider theme={themes}>
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
+            <Stack.Navigator initialRouteName='MyTabs'  >
+                <Stack.Screen name="MyTabs" component={MyTabs}  options={{headerShown:false}} />
+                <Stack.Screen name="PokemonDetails" component={PokemonDetails} options={{title:'Details'}} />
       </Stack.Navigator>
       </NavigationContainer>
         </PaperProvider>

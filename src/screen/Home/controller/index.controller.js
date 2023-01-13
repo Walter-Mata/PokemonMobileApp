@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+///MODEL
+import { PokemonEntity } from '../../../config/types'
+
 ///REDUX TYPES
 import * as types from '../../../redux/types'
 
@@ -9,7 +12,8 @@ import { getFormattedPokemonInfoApi } from '../../../shared/api_request_function
 
 const useController = () => {
   const dispatch = useDispatch()
-  const { currentPage, nextPage, isGettingMoreData } = useSelector(
+  const { favorite } = useSelector((state) => state.pokemon)
+  const { list, currentPage, nextPage, isGettingMoreData } = useSelector(
     (state) => state.pokemon.pokemons
   )
   const [isLoading, setIsLoading] = useState(false)
@@ -39,6 +43,16 @@ const useController = () => {
       console.log(error)
       onloadingHideModal()
     }
+  }
+
+  const onSearch = (name) => {
+    const result = list.filter((res) => res.name.includes(name))
+    return result
+  }
+
+  const onSearchFavorite = (name) => {
+    const result = favorite.filter((res) => res.name.includes(name))
+    return result
   }
 
   const onNextPage = () => setPage((page) => currentPage + 1)
@@ -72,6 +86,8 @@ const useController = () => {
     onloadingHideModal,
     onShowError,
     onHideError,
+    onSearch,
+    onSearchFavorite,
     onNextPage,
     isCloseToBottom,
   }

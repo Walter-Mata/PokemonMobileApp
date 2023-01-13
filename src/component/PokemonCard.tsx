@@ -23,7 +23,7 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   };
 
   const handlePress = () => {
-    navigation.navigate("Pokemon" as never, pokemon as never);
+    navigation.navigate("PokemonDetails" as never, pokemon as never);
   };
 
   return (
