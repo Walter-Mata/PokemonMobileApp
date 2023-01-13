@@ -1,40 +1,44 @@
 import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+///REDUX TYPES
 import * as types from '../../../redux/types'
 
-const useViewModel = ({ navigation }) => {
+///API CALLS
+import { getFormattedPokemonInfoApi } from '../../../shared/api_request_function'
+
+const useController = () => {
   const dispatch = useDispatch()
-  const { currentPage, isGettingMoreData } = useSelector((state) => state.order)
+  const { currentPage, nextPage, isGettingMoreData } = useSelector(
+    (state) => state.pokemon.pokemons
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [errroModal, setErrorModal] = useState(false)
   const [page, setPage] = useState(1)
 
   useMemo(() => {
     if (isGettingMoreData) {
-      //setIsLoading(true)
       fetchPokemon()
     }
   }, [page])
 
   async function fetchPokemon() {
-    await fetch('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0')
-      .then((res) => res.json())
-      .then((response) => {
-        onloadingHideModal()
-
-        dispatch({
-          type: types.POPULATE_POKEMON_LIST,
-          payload: {
-            pokemons: [...response.results],
-            currentPage: currentPage + 1,
-            isGettingMoreData: response.next != null ? true : false,
-          },
-        })
+    try {
+      const [data, next] = await getFormattedPokemonInfoApi(nextPage)
+      onloadingHideModal()
+      dispatch({
+        type: types.POPULATE_POKEMON_LIST,
+        payload: {
+          pokemons: [...data],
+          currentPage: currentPage + 1,
+          nextPage: next,
+          isGettingMoreData: next != null ? true : false,
+        },
       })
-      .catch(() => {
-        onloadingHideModal()
-      })
+    } catch (error) {
+      console.log(error)
+      onloadingHideModal()
+    }
   }
 
   const onNextPage = () => setPage((page) => currentPage + 1)
@@ -73,4 +77,4 @@ const useViewModel = ({ navigation }) => {
   }
 }
 
-export default useViewModel
+export default useController

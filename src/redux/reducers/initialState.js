@@ -3,7 +3,8 @@ export const initialState = {
     pokemons: {
       list: [],
       currentPage: 1,
-      isGettingMoreData: false,
+      nextPage: '',
+      isGettingMoreData: true,
     },
     favorite: [],
   },

@@ -1,4 +1,4 @@
-import initialState from './initialState'
+import { initialState } from './initialState'
 import {
   ADD_FAVORITE_POKEMON,
   POPULATE_POKEMON_LIST,
@@ -14,6 +14,7 @@ export const PokemonReducer = (state = initialState.pokemon, action) => {
           ...state.pokemons,
           list: [...state.pokemons.list, ...action.payload.pokemons],
           currentPage: action.payload.currentPage,
+          nextPage: action.payload.nextPage,
           isGettingMoreData: action.payload.isGettingMoreData,
         },
       }
